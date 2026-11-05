@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deepfake Detector Robustness: Paper Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6f8;--card:#fff;--ink:#14213d;--mute:#56657a;--line:#d5dee6;--sp:#1b7f79;--fr:#d98e04;--fu:#5b3fd0;--bad:#d6452b;--soft:#e4edf2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--card:#16212f;--ink:#e8eef5;--mute:#9aabbd;--line:#2a394b;--sp:#3fc4bb;--fr:#f2b441;--fu:#9d86ff;--bad:#ff7a5c;--soft:#1d2b3c}}
+:root[data-theme="dark"]{--bg:#0e1621;--card:#16212f;--ink:#e8eef5;--mute:#9aabbd;--line:#2a394b;--sp:#3fc4bb;--fr:#f2b441;--fu:#9d86ff;--bad:#ff7a5c;--soft:#1d2b3c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(1.8rem,5vw,2.9rem);max-width:20ch}
+h2{font-size:1.7rem}h3{font-size:1.15rem}
+p{margin:.4em 0 .9em;max-width:68ch}
+.hd{display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
+.txt{flex:1 1 380px}
+.art{flex:0 1 340px;margin:0 auto}
+.art img{width:150%;height:auto;display:block;border-radius:12px;border:1px solid var(--line)}
+header{padding:2.2rem 1.2rem 1rem;max-width:1000px;margin:auto}
+.sub{color:var(--mute);max-width:62ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav div{max-width:1000px;margin:auto;display:flex;gap:.3rem;overflow-x:auto;padding:.5rem 1.2rem}
+nav button{border:0;background:none;color:var(--mute);font:500 .95rem "IBM Plex Sans";padding:.5rem .9rem;border-radius:999px;cursor:pointer;white-space:nowrap}
+nav button[aria-selected=true]{background:var(--ink);color:var(--bg)}
+button:focus-visible{outline:3px solid var(--fu);outline-offset:2px}
+main{max-width:1000px;margin:auto;padding:1.5rem 1.2rem 3rem}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.2rem 1.3rem;margin:.9rem 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.9rem}
+.q{font:700 1.35rem/1.3 "Bricolage Grotesque";border-left:5px solid var(--sp);padding:.2rem 0 .2rem 1rem;margin:1rem 0;max-width:46ch}
+.tag{display:inline-block;font-size:.82rem;padding:.1rem .6rem;border-radius:999px;background:var(--soft);margin:0 .3rem .3rem 0}
+.sp{color:var(--sp)}.fr{color:var(--fr)}.fu{color:var(--fu)}
+.mcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem}
+.mc{text-align:left;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:1rem;cursor:pointer;font:inherit}
+.mc[aria-pressed=true]{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 22%,transparent)}
+.mc b{font-family:"Bricolage Grotesque";font-size:1.1rem;color:var(--c)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:.6rem 0}
+.flow span{background:var(--soft);padding:.35rem .7rem;border-radius:8px;font-size:.9rem}
+.flow i{color:var(--mute);font-style:normal}
+.steps{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem}
+.steps button{flex:1 1 130px;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:.6rem .8rem;border-radius:10px;cursor:pointer;font:inherit;font-size:.92rem}
+.steps button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{background:var(--soft);border-radius:8px;padding:.3rem .65rem;font-size:.88rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:.3rem .5rem .6rem 0}
+.seg button{border:0;background:var(--card);color:var(--ink);padding:.45rem .9rem;cursor:pointer;font:inherit;font-size:.9rem}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.row{display:grid;grid-template-columns:150px 1fr;gap:.6rem;align-items:center;padding:.35rem 0;font-size:.9rem}
+.row.sel{background:var(--soft);border-radius:8px}
+.row>button{all:unset;cursor:pointer;padding:.2rem .4rem;line-height:1.25}
+.row>button:focus-visible{outline:3px solid var(--fu)}
+.bars{position:relative}
+.bar{display:flex;align-items:center;gap:.4rem;height:15px;margin:2px 0;font-size:.75rem;color:var(--mute)}
+.bar u{display:block;height:11px;border-radius:3px;text-decoration:none}
+.base{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--bad)}
+.lab{font-size:.8rem;color:var(--bad);margin-left:.3rem}
+.leg{display:flex;gap:1rem;flex-wrap:wrap;font-size:.85rem;margin:.4rem 0}
+.leg b{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:.3rem;vertical-align:-1px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:.45rem .6rem;border-bottom:1px solid var(--line);text-align:left}
+.scroll{overflow-x:auto}
+.demo input{width:100%;accent-color:var(--bad)}
+.big{font:700 2rem "Bricolage Grotesque"}
+.refs li{margin-bottom:.7rem;max-width:80ch}
+.note{background:var(--soft);border-radius:10px;padding:.7rem 1rem;font-size:.92rem}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:no-preference){.bar u{transition:width .45s}}
+</style>
+</head>
+<body>
+<header>
+<div class="hd">
+  <div class="txt">
+    <h1>Can deepfake detectors survive the real world?</h1>
+    <p class="sub">An interactive guide to the paper “Robustness Analysis of Spatial, Frequency, and Spatial-Frequency Fusion-Based DeepFake Detectors under Adversarial and Real-World Distortions.” <br><strong>Authors:</strong> Rashika, Satyam Tyagi, Mayan Prajapati, Pranjal Sharma, Rachit Gupta.</p>
+  </div>
+  <figure class="art" style="margin:0">
+    <img src="nlp_diagram.png" alt="Deepfake detection illustration" onerror="this.parentNode.style.display='none'">
+  </figure>
+</div>
+</header>
+<nav><div role="tablist" id="tabs"></div></nav>
+<main>
+
+<section id="aim">
+<h2>Aim of the research</h2>
+<p>Deepfake detectors score well on clean test images. 
+But real images get compressed, resized, blurred, or even deliberately attacked. 
+This paper checks how three kinds of detector hold up when that happens.</p>
+
+<div class="q">How do spatial, frequency, and fusion detectors behave under 
+adversarial attacks and real-world distortions, alone and combined?</div>
+
+<div class="grid">
+<div class="card"><h3>What it is</h3>
+<p>A systematic, side-by-side evaluation of the robustness of spatial, frequency-based, and 
+fusion-based DeepFake detectors under adversarial attacks and real-world distortions.</p></div>
+
+<div class="card">
+<h3>Dataset</h3><p>Celeb-DF v2: real and fake celebrity videos. 5 frames are taken from each video.</p></div>
+<div class="card"><h3>Main finding</h3><p>No detector wins everywhere. 
+Adding frequency features to a spatial model does not guarantee better robustness.</p></div>
+</div>
+
+<h3 style="margin-top:1.4rem">Key takeaways</h3>
+<div class="card"><p><b>1.</b> Spatial and fusion detectors are strong on clean images and under noise.</p>
+<p><b>2.</b> Tiny FGSM and PGD attacks break all three detectors in the white-box setting.</p>
+<p><b>3.</b> JPEG compression is hard: precision stays high, but recall drops, so many fakes are called real.</p>
+<p><b>4.</b> A high F1-score can be misleading on an imbalanced test set.</p></div>
+</section>
+
+<section id="gap">
+<h2>Research gap</h2>
+<p>Earlier work has studied spatial, frequency, and fusion detectors, and separately studied attacks and distortions. 
+But each study used its own datasets, models, and settings, so the results cannot be compared directly.</p>
+<div class="grid">
+<div class="card"><h3>What exists</h3>
+<span class="tag">Spatial detectors</span><span class="tag">Frequency (DCT) detectors</span>
+<span class="tag">Fusion detectors</span><span class="tag">Attack studies</span><span class="tag">Distortion studies</span>
+<p>Most papers build and test one model at a time and show that fusion works.</p></div>
+<div class="card"><h3>What is missing</h3>
+<p>A single common test bench that answers: does fusion actually turn out to be more robust, or does it only add complexity?</p></div>
+<div class="card"><h3>How this paper fills it</h3>
+<p>Same dataset, same splits, same training settings for all three models. Each is tested on clean data, attacks, distortions, and sequences of them.</p></div>
+</div>
+<div class="note"><b>Novelty:</b> the paper studies how each approach fails under each condition, 
+instead of only reporting clean-image scores. It also checks whether high F1 really means reliable detection.</div>
+</section>
+
+<section id="models">
+<h2>The three models and how they work</h2>
+<p>Tap a model to see its working. All three end in a two-output head that gives a Real score and a Fake score, and the higher probability wins.</p>
+<div class="mcards" id="mcards"></div>
+<div class="card" id="mdetail"></div>
+<div class="card"><h3>How the final decision is made</h3>
+<div class="flow"><span>Feature vector</span><i>></i><span>Linear layer → 2 logits</span><i>>
+
+</i><span>Softmax → probabilities</span><i>></i><span>Higher one wins</span></div>
+<p>Example: Real 0.20, Fake 0.80 → the frame is predicted <b>Fake</b>. During training, cross-entropy loss compares the 
+scores with the true labels and the AdamW optimizer updates the weights.</p></div>
+</section>
+
+<section id="method">
+<h2>Methodology</h2>
+<p>Five stages. Tap each stage for details.</p>
+<div class="steps" id="steps"></div>
+<div class="card" id="sdetail"></div>
+<h3>Attacks and distortions tested</h3>
+<div class="grid">
+<div class="card"><h3>Adversarial attacks</h3>
+<p><b>FGSM</b> adds one small step in the direction that raises the model’s loss.</p>
+<p><b>PGD</b> repeats small steps and keeps the change within a limit, so it is stronger.</p>
+<div class="chips"><span class="chip">FGSM ε = 0.001, 0.003, 0.005</span><span class="chip">PGD ε = 0.003, 0.005</span>
+    <span class="chip">PGD: 10 steps, α = 0.001</span></div></div>
+
+<div class="card"><h3>Real-world distortions</h3>
+<div class="chips"><span class="chip">JPEG quality 60</span><span class="chip">Gaussian noise σ = 2</span>
+    <span class="chip">Gaussian blur σ = 2</span><span class="chip">Resize scale 0.5</span></div>
+<p style="margin-top:.7rem">Compound tests apply these in order, for example PGD → JPEG → Blur → Resize.</p>
+<br>
+<p>“We selected these parameter values as fixed experimental settings to simulate different types of image degradation. 
+ JPEG quality 60 represents lossy compression, 
+Gaussian noise and blur simulate noisy or unclear images, and a resize scale of 0.5 simulates reduced resolution."</p></div>
+</div>
+<div class="card"><h3>How performance is measured</h3>
+<p>Fake is the positive class and the threshold is 0.5. <br><b>Precision:</b> of the frames called fake, how many really are.<br><b>
+    Recall:</b> of the real fakes, how many were caught. <br><b>F1</b> combines both. <br><b>ROC-AUC</b> shows how well real and fake are separated at any threshold. <b>
+<br>Balanced accuracy</b> = (recall + specificity) / 2, which treats both classes equally.</p></div>
+</section>
+
+<section id="results">
+<h2>Results</h2>
+<!--<p>Pick a metric and a condition. The dashed red line is the score of a lazy detector that calls every frame fake.</p>
+<div class="seg" id="metric"></div><div class="seg" id="filter"></div>
+<div class="leg"><span><b style="background:var(--sp)"></b>Spatial</span><span><b style="background:var(--fr)"></b>Frequency</span><span><b style="background:var(--fu)"></b>Fusion</span></div>
+<div class="card" id="chart"></div>
+<div class="note" id="insight"></div> -->
+
+<!-- <h3 style="margin-top:1.6rem">Try it: why F1 can fool you</h3>
+<div class="card demo">
+<p>86.4% of the test frames are fake. Imagine a detector that says “fake” for every frame.</p>
+<div class="grid"><div><div class="big">0.864</div>accuracy</div><div><div class="big">0.927</div>F1-score</div><div><div class="big">0.500</div>balanced accuracy (chance)</div></div>
+<p style="margin-top:.8rem">So the frequency detector’s F1 of 0.917 under JPEG→Blur→Resize is below even this lazy baseline, and its balanced accuracy is 0.501.</p>
+<label for="fk">Share of fake frames in a test set: <b id="fkv">86</b>%</label>
+<input id="fk" type="range" min="50" max="99" value="86">
+<p id="fkout"></p></div> -->
+
+<!-- <h3>Adversarial attacks (ε = 0.005): F1 / ROC-AUC</h3>
+<div class="card scroll"><table>
+<tr><th>Detector</th><th>White-box FGSM</th><th>White-box PGD</th><th>Transfer FGSM</th><th>Transfer PGD</th></tr>
+<tr><td class="sp">Spatial</td><td>0.108 / 0.015</td><td>0.002 / 0.000</td><td>0.108 / 0.015</td><td>0.002 / 0.000</td></tr>
+<tr><td class="fr">Frequency</td><td>0.012 / 0.033</td><td>0.006 / 0.014</td><td>0.640 / 0.646</td><td>0.644 / 0.647</td></tr>
+<tr><td class="fu">Fusion</td><td>0.190 / 0.024</td><td>0.004 / 0.000</td><td>0.242 / 0.072</td><td>0.078 / 0.024</td></tr></table>
+<p class="note" style="margin-top:.7rem">Transfer attacks are made on the spatial detector. They hurt fusion (it shares the EfficientNet-B0 branch) but barely change the frequency detector, which is already weak. JPEG applied after an attack removes much of the attack’s effect.</p></div> -->
+
+<!-- <h3>Conclusion</h3> -->
+<div class="card">The spatial and fusion models demonstrate strong performance on clean and noisy images. However, FGSM and PGD adversarial 
+  attacks reduce the performance of all three detectors. JPEG compression and compound distortions further affect detection accuracy, 
+  highlighting the challenges of maintaining robustness under multiple image degradations. The frequency-based model performs comparatively 
+  weaker in most tested conditions, while the fusion model does not consistently outperform the spatial model. Overall, the comparison shows 
+  that no single model performs best across every condition, and combining spatial and frequency features does not automatically guarantee better robustness.</p>
+  <b>Future work:</b> repeat with several random seeds, try other datasets, and test different distortion strengths.</p><br>
+<b>“Our key finding is that high performance on clean images does not necessarily translate into robustness under real-world distortions and adversarial attacks. Reliable 
+  DeepFake detection therefore requires evaluating not only how accurately a model detects fakes, but also how consistently it performs under challenging conditions.”</b></div>
+</section>
+
+<section id="refs">
+<h2>References</h2>
+<ol class="refs">
+<li>M. S. Rana, M. N. Nobi, B. Murali, and A. H. Sung, “Deepfake detection: A systematic literature review,” <i>IEEE Access</i>, vol. 10, pp. 25494–25513, 2022. <a href="https://doi.org/10.1109/ACCESS.2022.3154404" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>U. Ojha, Y. Li, and Y. J. Lee, “Towards universal fake image detectors that generalize across generative models,” in <i>Proc. IEEE/CVF CVPR</i>, 2023. <a href="https://arxiv.org/abs/2302.10174" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>P. Neekhara, B. Dolhansky, J. Bitton, and C. Canton Ferrer, “Adversarial threats to DeepFake detection: A practical perspective,” in <i>Proc. IEEE/CVF CVPRW</i>, 2021, pp. 923–932. <a href="https://arxiv.org/abs/2011.09957" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>S. Hussain, P. Neekhara, M. Jere, F. Koushanfar, and J. McAuley, “Adversarial Deepfakes: Evaluating vulnerability of Deepfake detectors to adversarial examples,” in <i>Proc. IEEE/CVF WACV</i>, 2021, pp. 3348–3357. <a href="https://arxiv.org/abs/2002.12749" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>A. Hooda, N. Mangaokar, R. Feng, K. Fawaz, S. Jha, and A. Prakash, “D4: Detection of adversarial diffusion deepfakes using disjoint ensembles,” in <i>Proc. IEEE/CVF WACV</i>, 2024. <a href="https://arxiv.org/abs/2202.05687" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>I. J. Goodfellow, J. Shlens, and C. Szegedy, “Explaining and harnessing adversarial examples,” in <i>Proc. ICLR</i>, 2015. <a href="https://arxiv.org/abs/1412.6572" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>A. Madry, A. Makelov, L. Schmidt, D. Tsipras, and A. Vladu, “Towards deep learning models resistant to adversarial attacks,” in <i>Proc. ICLR</i>, 2018. <a href="https://arxiv.org/abs/1706.06083" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>Y. Li, X. Yang, P. Sun, H. Qi, and S. Lyu, “Celeb-DF: A large-scale challenging dataset for DeepFake forensics,” in <i>Proc. IEEE/CVF CVPR</i>, 2020, pp. 3207–3216. <a href="https://arxiv.org/abs/1909.12962" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>W. Wang, Z. Zhao, N. Sebe, and B. Lepri, “Turn fake into real: Adversarial head turn attacks against DeepFake detection,” arXiv:2309.01104, 2023. <a href="https://arxiv.org/abs/2309.01104" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>R. Wang, Z. Huang, Z. Chen, L. Liu, J. Chen, and L. Wang, “Anti-Forgery: Towards a stealthy and robust DeepFake disruption attack via adversarial perceptual-aware perturbations,” arXiv:2206.00477, 2022. <a href="https://arxiv.org/abs/2206.00477" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>M. Tan and Q. V. Le, “EfficientNet: Rethinking model scaling for convolutional neural networks,” in <i>Proc. ICML</i>, 2019, pp. 6105–6114. <a href="https://arxiv.org/abs/1905.11946" target="_blank" rel="noopener">View paper ↗</a></li>
+<li>I. Loshchilov and F. Hutter, “Decoupled weight decay regularization,” in <i>Proc. ICLR</i>, 2019. <a href="https://arxiv.org/abs/1711.05101" target="_blank" rel="noopener">View paper ↗</a></li>
+</ol>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+// Tabs
+const TABS=[["aim","Aim"],["gap","Research gap"],["models","Models"],["method","Methodology"],["results","Results"],["refs","References"]];
+const tabs=$("#tabs");
+TABS.forEach(([id,t])=>{const b=document.createElement("button");b.textContent=t;b.setAttribute("role","tab");b.dataset.id=id;b.onclick=()=>show(id);tabs.appendChild(b)});
+function show(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===id));
+tabs.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",b.dataset.id===id));window.scrollTo({top:0})}
+show("aim");
+// Models
+const M=[
+{n:"Spatial",s:"EfficientNet-B0",c:"var(--sp)",d:"Looks at the visual content of the face.",
+w:["Reads the RGB frame (224 × 224)","EfficientNet-B0 (pretrained) extracts features","Features map to a 256-dimensional embedding","Two-output head: Real / Fake"],
+t:"It learns face texture, skin detail, eyes, edges, and blending flaws. Good on clean data, but its learned features are fragile when images are changed."},
+{n:"Frequency",s:"DCT + CNN",c:"var(--fr)",d:"Looks at hidden frequency patterns instead of pixels.",
+w:["2-D Discrete Cosine Transform of the frame","log(1+|x|) and standardization","Small CNN learns from the frequency map","256-dimensional embedding → Real / Fake"],
+t:"DCT rewrites the image as frequency components, where editing or generation traces may show. In this study it was weak: clean accuracy 0.532, ROC-AUC 0.643."},
+{n:"Fusion",s:"Spatial + Frequency",c:"var(--fu)",d:"Combines both views to make one decision.",
+w:["Spatial branch gives 256 features","Frequency branch gives 256 features","Concatenate into 512 features","Linear 512→256, ReLU, Dropout 0.3, then Real / Fake"],
+t:"The idea is that visible flaws and hidden glitches complement each other. The paper tests this as a hypothesis, not a promise: it helps in some conditions and hurts in others."}];
+const mc=$("#mcards");let cur=0;
+function drawM(){mc.innerHTML="";M.forEach((m,i)=>{const b=document.createElement("button");b.className="mc";b.style.setProperty("--c",m.c);b.setAttribute("aria-pressed",i===cur);
+b.innerHTML=`<b>${m.n}</b><br><small>${m.s}</small><p style="margin:.4rem 0 0">${m.d}</p>`;b.onclick=()=>{cur=i;drawM()};mc.appendChild(b)});
+const m=M[cur];$("#mdetail").innerHTML=`<h3 style="color:${m.c}">${m.n} detector: ${m.s}</h3><div class="flow">${m.w.map((x,i)=>(i?"<i>›</i>":"")+`<span>${x}</span>`).join("")}</div><p>${m.t}</p>`}
+drawM();
+// Method steps
+const S=[
+["Data preparation","Real and fake videos from Celeb-DF v2 are split by video into 70% train, 15% validation, 15% test, so frames of one video never land in two sets. Then 5 evenly spaced frames per video are saved. Labels: Real = 0, Fake = 1."],
+["Training","Frames are resized to 224 × 224, converted to RGB tensors, and normalized with ImageNet values. Random horizontal flip is used for augmentation, and a weighted sampler balances Real and Fake. All three models use the same data and settings: AdamW, cross-entropy loss, learning rate 1e-4, up to 15 epochs, early stopping after 4 epochs without gain."],
+["Clean evaluation","The checkpoint with the best validation ROC-AUC is picked. It is then tested once on the test set, at frame level and at video level (frame probabilities are averaged per video)."],
+["Robustness tests","The same test frames are attacked (FGSM, PGD) or distorted (JPEG, noise, blur, resize). Compound runs apply a sequence in order, and the sequence is stored so it can be repeated."],
+["Comparison","Accuracy, precision, recall, F1, ROC-AUC, and balanced accuracy are compared across models and conditions, along with the all-fake baseline. The question is which detector holds up, and when."]];
+let sc=0;const st=$("#steps");
+function drawS(){st.innerHTML="";S.forEach((s,i)=>{const b=document.createElement("button");b.setAttribute("aria-pressed",i===sc);b.textContent=(i+1)+". "+s[0];b.onclick=()=>{sc=i;drawS()};st.appendChild(b)});
+$("#sdetail").innerHTML=`<h3>${S[sc][0]}</h3><p>${S[sc][1]}</p>`}
+drawS();
+// Results chart
+// const C=["Clean","JPEG","Noise","Blur","Resize","FGSM→JPEG","PGD→JPEG","FGSM→Noise→JPEG","PGD→Noise→JPEG","JPEG→Blur→Resize","PGD→JPEG→Blur→Resize"];
+// const D={F1:[[.966,.653,.970],[.651,.483,.585],[.965,.583,.971],[.844,.881,.730],[.942,.926,.946],[.487,.409,.420],[.464,.410,.414],[.545,.439,.479],[.542,.444,.483],[.760,.917,.647],[.753,.917,.635]],
+// "ROC-AUC":[[.964,.643,.970],[.835,.636,.847],[.964,.643,.969],[.593,.539,.583],[.864,.626,.854],[.670,.561,.684],[.679,.557,.698],[.743,.593,.759],[.754,.592,.771],[.581,.549,.585],[.569,.527,.570]],
+// "Balanced accuracy":[null,[.710,.586,.692],[.866,.586,.859],[.555,.526,.558],[.642,.534,.681],[.600,.531,.587],[.599,.529,.594],[.636,.556,.624],[.645,.556,.633],[.552,.501,.558],[.542,.501,.546]]};
+// const BASE={F1:.927,"ROC-AUC":.5,"Balanced accuracy":.5};
+// const NOTE={F1:"Look at Blur, Resize, and the last two rows: the frequency detector’s F1 looks high, but it is not above the 0.927 baseline. It simply calls most frames fake.",
+// "ROC-AUC":"ROC-AUC shows separation power. Spatial and fusion stay close to each other, and both fall sharply under blur and the long JPEG→Blur→Resize chain.",
+// "Balanced accuracy":"Balanced accuracy exposes the truth: the frequency detector sits near chance (0.5) everywhere, and every detector is weak under blur. (Clean balanced accuracy is not reported in the paper.)"};
+// let met="F1",flt="All",sel=-1;
+// const col=["var(--sp)","var(--fr)","var(--fu)"];
+// function drawC(){
+// $("#metric").innerHTML="";Object.keys(D).forEach(k=>{const b=document.createElement("button");b.textContent=k;b.setAttribute("aria-pressed",k===met);b.onclick=()=>{met=k;drawC()};$("#metric").appendChild(b)});
+// $("#filter").innerHTML="";["All","Single","Compound"].forEach(k=>{const b=document.createElement("button");b.textContent=k;b.setAttribute("aria-pressed",k===flt);b.onclick=()=>{flt=k;drawC()};$("#filter").appendChild(b)});
+// const base=BASE[met];let h="";
+// C.forEach((c,i)=>{const v=D[met][i];if(!v)return;if(flt==="Single"&&i>4)return;if(flt==="Compound"&&i<5)return;
+// h+=`<div class="row"><button>${c}</button><div class="bars"><div class="base" style="left:${base*100}%"></div>${v.map((x,j)=>`<div class="bar"><u style="width:${x*100}%;background:${col[j]}"></u>${x.toFixed(3)}</div>`).join("")}</div></div>`});
+// $("#chart").innerHTML=h+`<span class="lab">Dashed line = ${met==="F1"?"all-fake detector (F1 0.927)":"chance level (0.5)"}</span>`;
+// $("#insight").textContent=NOTE[met]}
+// drawC();
+// F1 demo
+
+</script>
+</body>
+</html>
