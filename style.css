@@ -175,7 +175,7 @@ tr:hover td{background:color-mix(in srgb,var(--soft) 60%,transparent)}
 .brand img{width:58px;height:58px;border-radius:14px;object-fit:cover;display:block;
   border:1px solid color-mix(in srgb,#2f8bff 45%,var(--line));
   box-shadow:0 0 0 4px color-mix(in srgb,#2f8bff 12%,transparent),var(--shadow-h)}
-.brand span{font:700 1.15rem/1.1 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:.01em}
-.brand b{color:#2f8bff}
+.brand span{font:700 1.15rem/1.1 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:.01em;color:color-mix(in srgb,var(--accent) 35%,var(--ink))}
+.brand b{color:color-mix(in srgb,var(--accent) 80%,#c4b5fd)}
 .brand small{display:block;margin-top:.3rem;font:500 .7rem "IBM Plex Sans",system-ui,sans-serif;
   letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
