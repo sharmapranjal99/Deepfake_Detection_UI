@@ -1,0 +1,171 @@
+/* ============ Theme tokens ============ */
+:root{
+  --bg:#f4f7fb;--bg2:#eaf0f7;--card:#ffffff;--ink:#14213d;--mute:#5a6a80;--line:#dde5ee;
+  --sp:#1b7f79;--fr:#c98200;--fu:#5b3fd0;--bad:#d6452b;--soft:#eef3f8;
+  --accent:#5b3fd0;--accent2:#1b7f79;
+  --shadow:0 1px 2px rgba(20,33,61,.05),0 6px 20px rgba(20,33,61,.06);
+  --shadow-h:0 2px 4px rgba(20,33,61,.06),0 14px 34px rgba(20,33,61,.11);
+  --radius:16px;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c131d;--bg2:#111b28;--card:#152030;--ink:#e8eef5;--mute:#9aabbd;--line:#263547;
+  --sp:#3fc4bb;--fr:#f2b441;--fu:#a28dff;--bad:#ff7a5c;--soft:#1b293a;--accent:#a28dff;--accent2:#3fc4bb;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  --shadow-h:0 2px 4px rgba(0,0,0,.35),0 14px 34px rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{
+  --bg:#0c131d;--bg2:#111b28;--card:#152030;--ink:#e8eef5;--mute:#9aabbd;--line:#263547;
+  --sp:#3fc4bb;--fr:#f2b441;--fu:#a28dff;--bad:#ff7a5c;--soft:#1b293a;--accent:#a28dff;--accent2:#3fc4bb;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  --shadow-h:0 2px 4px rgba(0,0,0,.35),0 14px 34px rgba(0,0,0,.4)}
+
+/* ============ Base ============ */
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--ink);font:16px/1.65 "IBM Plex Sans",system-ui,sans-serif;
+  background:
+    radial-gradient(900px 420px at 0% -10%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 70%),
+    radial-gradient(800px 400px at 100% 0%,color-mix(in srgb,var(--accent2) 12%,transparent),transparent 70%),
+    var(--bg);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased
+}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0 0 .55em;letter-spacing:-.01em}
+h1{font-size:clamp(1.9rem,5vw,3rem);max-width:20ch;
+  background:linear-gradient(100deg,var(--ink) 30%,var(--accent) 110%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(1.5rem,3.5vw,1.95rem);position:relative;padding-bottom:.45rem}
+h2::after{content:"";position:absolute;left:0;bottom:0;width:56px;height:4px;border-radius:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2))}
+h3{font-size:1.15rem}
+p{margin:.4em 0 .9em;max-width:68ch}
+a{color:var(--accent);text-decoration:none;font-weight:500}
+a:hover{text-decoration:underline}
+::selection{background:color-mix(in srgb,var(--accent) 25%,transparent)}
+
+/* ============ Header ============ */
+header{padding:2.8rem 1.2rem 1.6rem;max-width:1040px;margin:auto}
+.hd{display:flex;gap:2.4rem;align-items:center;flex-wrap:wrap}
+.txt{flex:1 1 380px}
+.art{flex:0 1 360px;margin:0 auto}
+.art img{width:100%;height:auto;display:block;border-radius:var(--radius);border:1px solid var(--line);
+  box-shadow:var(--shadow-h);background:var(--card)}
+.sub{color:var(--mute);max-width:62ch;font-size:1.02rem}
+.sub strong{color:var(--ink)}
+
+/* ============ Nav tabs ============ */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)}
+nav div{max-width:1040px;margin:auto;display:flex;gap:.35rem;overflow-x:auto;padding:.6rem 1.2rem;scrollbar-width:none}
+nav div::-webkit-scrollbar{display:none}
+nav button{border:0;background:none;color:var(--mute);font:500 .95rem "IBM Plex Sans",system-ui,sans-serif;
+  padding:.5rem 1rem;border-radius:999px;cursor:pointer;white-space:nowrap;transition:background .2s,color .2s}
+nav button:hover{background:var(--soft);color:var(--ink)}
+nav button[aria-selected=true]{background:var(--ink);color:var(--bg);box-shadow:var(--shadow)}
+button:focus-visible{outline:3px solid var(--fu);outline-offset:2px}
+
+/* ============ Layout ============ */
+main{max-width:1040px;margin:auto;padding:2rem 1.2rem 4rem}
+section{display:none}
+section.on{display:block}
+@media(prefers-reduced-motion:no-preference){
+  section.on{animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+
+/* ============ Cards ============ */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.35rem 1.45rem;margin:1rem 0;box-shadow:var(--shadow);transition:box-shadow .25s,transform .25s}
+.card p:last-child{margin-bottom:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1rem 0}
+.grid>.card{margin:0;position:relative;overflow:hidden}
+.grid>.card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.grid>.card:hover{box-shadow:var(--shadow-h);transform:translateY(-2px)}
+
+/* Research question */
+.q{font:700 1.3rem/1.35 "Bricolage Grotesque",system-ui,sans-serif;max-width:52ch;
+  border-left:5px solid var(--sp);padding:1rem 1.3rem;margin:1.3rem 0;border-radius:0 var(--radius) var(--radius) 0;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--sp) 12%,var(--card)),var(--card))}
+
+.tag{display:inline-block;font-size:.82rem;padding:.2rem .7rem;border-radius:999px;background:var(--soft);
+  border:1px solid var(--line);margin:0 .3rem .4rem 0}
+.sp{color:var(--sp);font-weight:500}.fr{color:var(--fr);font-weight:500}.fu{color:var(--fu);font-weight:500}
+
+/* ============ Model cards ============ */
+.mcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.9rem;margin:1rem 0}
+.mc{text-align:left;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:var(--radius);
+  padding:1.1rem 1.15rem;cursor:pointer;font:inherit;box-shadow:var(--shadow);transition:border-color .2s,box-shadow .2s,transform .2s}
+.mc:hover{transform:translateY(-2px);box-shadow:var(--shadow-h)}
+.mc[aria-pressed=true]{border-color:var(--c);
+  background:linear-gradient(160deg,color-mix(in srgb,var(--c) 10%,var(--card)),var(--card));
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent),var(--shadow-h)}
+.mc b{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.2rem;color:var(--c)}
+.mc small{color:var(--mute)}
+
+/* Flow pipeline */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin:.8rem 0}
+.flow span{background:var(--soft);border:1px solid var(--line);padding:.4rem .8rem;border-radius:10px;font-size:.9rem}
+.flow i{color:var(--mute);font-style:normal;font-weight:700}
+
+/* ============ Method steps ============ */
+.steps{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0 .4rem}
+.steps button{flex:1 1 140px;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  padding:.7rem .9rem;border-radius:12px;cursor:pointer;font:inherit;font-size:.92rem;font-weight:500;
+  box-shadow:var(--shadow);transition:background .2s,transform .2s}
+.steps button:hover{transform:translateY(-1px);background:var(--soft)}
+.steps button[aria-pressed=true]{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.4rem}
+.chip{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:.3rem .7rem;font-size:.86rem;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+
+/* ============ Results chart / controls ============ */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:.3rem .5rem .6rem 0;background:var(--card)}
+.seg button{border:0;background:var(--card);color:var(--ink);padding:.45rem .95rem;cursor:pointer;font:inherit;font-size:.9rem}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.row{display:grid;grid-template-columns:150px 1fr;gap:.6rem;align-items:center;padding:.35rem 0;font-size:.9rem}
+.row.sel{background:var(--soft);border-radius:8px}
+.row>button{all:unset;cursor:pointer;padding:.2rem .4rem;line-height:1.25}
+.row>button:focus-visible{outline:3px solid var(--fu)}
+.bars{position:relative}
+.bar{display:flex;align-items:center;gap:.4rem;height:15px;margin:2px 0;font-size:.75rem;color:var(--mute)}
+.bar u{display:block;height:11px;border-radius:3px;text-decoration:none}
+.base{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--bad)}
+.lab{font-size:.8rem;color:var(--bad);margin-left:.3rem}
+.leg{display:flex;gap:1rem;flex-wrap:wrap;font-size:.85rem;margin:.4rem 0}
+.leg b{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:.3rem;vertical-align:-1px}
+
+/* ============ Table ============ */
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:.6rem .75rem;border-bottom:1px solid var(--line);text-align:left}
+th{background:var(--soft);font-weight:500}
+tr:hover td{background:color-mix(in srgb,var(--soft) 60%,transparent)}
+.scroll{overflow-x:auto}
+
+.demo input{width:100%;accent-color:var(--bad)}
+.big{font:700 2rem "Bricolage Grotesque",system-ui,sans-serif}
+
+/* ============ References ============ */
+.refs{padding-left:1.4rem}
+.refs li{margin-bottom:.8rem;max-width:84ch;padding:.75rem 1rem;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;box-shadow:var(--shadow)}
+.refs li::marker{color:var(--accent);font-weight:700}
+.refs a{white-space:nowrap;margin-left:.2rem}
+
+/* ============ Note ============ */
+.note{background:color-mix(in srgb,var(--accent) 8%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 22%,var(--line));
+  border-left:4px solid var(--accent);border-radius:12px;padding:.85rem 1.1rem;font-size:.93rem;margin:1rem 0}
+
+/* ============ Responsive ============ */
+@media(max-width:560px){
+  .row{grid-template-columns:1fr}
+  header{padding-top:2rem}
+  .card{padding:1.1rem 1.1rem}
+  .q{font-size:1.12rem}
+}
+@media(prefers-reduced-motion:no-preference){.bar u{transition:width .45s}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
